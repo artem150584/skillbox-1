@@ -30,7 +30,7 @@ public class LoginController {
     }
 
     @PostMapping("/auth")
-    public String authenticate(LoginForm loginForm){
+    public String authenticate(LoginForm loginForm) {
         if (loginService.authenticate(loginForm)) {
             logger.info("login OK redirect to book shelf");
             return "redirect:/books/shelf";
@@ -38,6 +38,12 @@ public class LoginController {
             logger.info("login FAIL redirect back to login");
             return "redirect:/login";
         }
+    }
 
+    @PostMapping("/add")
+    public String addUser(LoginForm user){
+        loginService.addUser(user);
+        logger.info("Current repository contents: " + loginService.getAllUsers().size());
+        return "redirect:/login";
     }
 }

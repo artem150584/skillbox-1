@@ -25,7 +25,15 @@
             <br>
             <input class="login_item" type="password" placeholder="password" th:field="*{password}">
             <br>
-            <input class="login_item" type="submit" placeholder="login">
+            <input class="login_item" type="submit" value="login">
+        </form>
+
+        <form method="post" th:action="@{/login/add}" th:object="${loginForm}">
+            <input class="login_item" type="text" placeholder="enter username" th:field="*{username}">
+            <br>
+            <input class="login_item" type="password" placeholder="enter password" th:field="*{password}">
+            <br>
+            <input class="login_item" type="submit" value="add user">
         </form>
     </div>
 </body>
