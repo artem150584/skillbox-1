@@ -2,10 +2,13 @@ package org.example.app.services;
 
 import org.apache.log4j.Logger;
 import org.example.web.dto.Book;
+import org.example.web.dto.RemovedBook;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Repository
 public class BookRepository implements ProjectRepository<Book> {
@@ -20,7 +23,7 @@ public class BookRepository implements ProjectRepository<Book> {
 
     @Override
     public void store(Book book) {
-        if(book.getAuthor().isEmpty() && book.getTitle().isEmpty() && book.getSize() == null) {
+        if (book.getAuthor().isEmpty() && book.getTitle().isEmpty() && book.getSize() == null) {
             logger.info("can not store book: all fields are empty");
         } else {
             book.setId(book.hashCode());
@@ -30,13 +33,34 @@ public class BookRepository implements ProjectRepository<Book> {
     }
 
     @Override
-    public boolean removeItemById(Integer bookIdToRemove) {
-        for (Book book :reteiveAll()) {
-            if (book.getId().equals(bookIdToRemove)) {
+    public boolean removeItemById(RemovedBook removedBook) {
+        List<Book> booksToRemove = new ArrayList<>();
+        Integer removedBookId = removedBook.getId();
+        String authorPattern = removedBook.getAuthorRegExp();
+        String titlePattern = removedBook.getTitleRegExp();
+        String sizePattern = removedBook.getSizeRegExp();
+
+        boolean isAnyFieldPresent = (removedBookId != null) || !authorPattern.isEmpty() ||
+                !titlePattern.isEmpty() || !sizePattern.isEmpty();
+
+        for (Book book : reteiveAll()) {
+            if (isAnyFieldPresent &&
+                    ((book.getId().equals(removedBookId) || removedBookId == null) &&
+                            isRegExpFound(book.getAuthor(), authorPattern) &&
+                            isRegExpFound(book.getTitle(), titlePattern) &&
+                            isRegExpFound(String.format("%d", book.getSize()), sizePattern))) {
                 logger.info("remove book completed: " + book);
-                return repo.remove(book);
+                booksToRemove.add(book);
             }
         }
-        return false;
+
+        return repo.removeAll(booksToRemove);
+    }
+
+    private boolean isRegExpFound(String field, String pattern) {
+        Pattern ptrn = Pattern.compile(pattern);
+        Matcher matcher = ptrn.matcher(field);
+
+        return matcher.find();
     }
 }

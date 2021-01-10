@@ -3,6 +3,7 @@ package org.example.web.controllers;
 import org.apache.log4j.Logger;
 import org.example.app.services.BookService;
 import org.example.web.dto.Book;
+import org.example.web.dto.RemovedBook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +28,7 @@ public class BookShelfController {
     public String books(Model model) {
         logger.info("got book shelf");
         model.addAttribute("book", new Book());
+        model.addAttribute("removedBook", new RemovedBook());
         model.addAttribute("bookList", bookService.getAllBooks());
         return "book_shelf";
     }
@@ -39,8 +41,8 @@ public class BookShelfController {
     }
 
     @PostMapping("/remove")
-    public String removeBook(@RequestParam(value = "bookIdToRemove") Integer bookIdToRemove, Model model) {
-        if(bookService.removeBookById(bookIdToRemove)) {
+    public String removeBook(RemovedBook removedBook, Model model) {
+        if(bookService.removeBookById(removedBook)) {
             return "redirect:/books/shelf";
         } else {
             return books(model);
