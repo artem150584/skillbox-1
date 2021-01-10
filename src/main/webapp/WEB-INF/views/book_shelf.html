@@ -83,6 +83,25 @@
             </table>
         </form>
 
+        <form method="post" th:action="@{/books/filter}" th:object="${bookPattern}">
+            <table>
+                <tr>
+                    <td>
+                        <input type="text" placeholder="author pattern" th:field="*{authorPattern}">
+                    </td>
+                    <td>
+                        <input type="text" placeholder="title pattern" th:field="*{titlePattern}">
+                    </td>
+                    <td>
+                        <input type="text" placeholder="size pattern" th:field="*{sizePattern}">
+                    </td>
+                    <td>
+                        <input type="submit" value="filter">
+                    </td>
+                </tr>
+            </table>
+        </form>
+
         <table id="books">
             <tr>
                 <th>id</th>

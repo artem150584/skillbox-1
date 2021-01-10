@@ -1,7 +1,7 @@
 package org.example.app.services;
 
 import org.example.web.dto.Book;
-import org.example.web.dto.RemovedBook;
+import org.example.web.dto.BookPattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +21,10 @@ public class BookService {
         return bookRepo.reteiveAll();
     }
 
+    public List<Book> getFilteredBooks(BookPattern removedBook) {
+        return bookRepo.reteiveFiltered(removedBook);
+    }
+
     public void saveBook(Book book) {
         bookRepo.store(book);
     }
@@ -29,7 +33,7 @@ public class BookService {
         return bookRepo.removeItemById(bookIdToRemove);
     }
 
-    public boolean removeBookByPattern(RemovedBook removedBook) {
+    public boolean removeBookByPattern(BookPattern removedBook) {
         return bookRepo.removeItemsByPattern(removedBook);
     }
 }

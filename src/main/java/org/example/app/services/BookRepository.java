@@ -2,7 +2,7 @@ package org.example.app.services;
 
 import org.apache.log4j.Logger;
 import org.example.web.dto.Book;
-import org.example.web.dto.RemovedBook;
+import org.example.web.dto.BookPattern;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -19,6 +19,28 @@ public class BookRepository implements ProjectRepository<Book> {
     @Override
     public List<Book> reteiveAll() {
         return new ArrayList<>(repo);
+    }
+
+    @Override
+    public List<Book> reteiveFiltered(BookPattern bookPattern) {
+        List<Book> filteredBooks = new ArrayList<>();
+
+        String authorPattern = bookPattern.getAuthorPattern();
+        String titlePattern = bookPattern.getTitlePattern();
+        String sizePattern = bookPattern.getSizePattern();
+
+        boolean isAnyFieldFilled = !(authorPattern.isEmpty() && titlePattern.isEmpty() && sizePattern.isEmpty());
+
+        for (Book book : reteiveAll()) {
+            if (isAnyFieldFilled &&
+                    isPatternFound(book.getAuthor(), authorPattern) &&
+                    isPatternFound(book.getTitle(), titlePattern) &&
+                    isPatternFound(String.format("%d", book.getSize()), sizePattern)) {
+                filteredBooks.add(book);
+            }
+        }
+
+        return filteredBooks;
     }
 
     @Override
@@ -44,29 +66,13 @@ public class BookRepository implements ProjectRepository<Book> {
     }
 
     @Override
-    public boolean removeItemsByPattern(RemovedBook removedBook) {
-        List<Book> booksToRemove = new ArrayList<>();
-
-        String authorPattern = removedBook.getAuthorPattern();
-        String titlePattern = removedBook.getTitlePattern();
-        String sizePattern = removedBook.getSizePattern();
-
-        boolean isAnyFieldFilled = !(authorPattern.isEmpty() && titlePattern.isEmpty() && sizePattern.isEmpty());
-
-        for (Book book : reteiveAll()) {
-            if (isAnyFieldFilled &&
-                    isRegExpFound(book.getAuthor(), authorPattern) &&
-                    isRegExpFound(book.getTitle(), titlePattern) &&
-                    isRegExpFound(String.format("%d", book.getSize()), sizePattern)) {
-                logger.info("remove book completed: " + book);
-                booksToRemove.add(book);
-            }
-        }
-
+    public boolean removeItemsByPattern(BookPattern removedBook) {
+        List<Book> booksToRemove = reteiveFiltered(removedBook);
+        logger.info("remove book(s) completed: " + booksToRemove);
         return repo.removeAll(booksToRemove);
     }
 
-    private boolean isRegExpFound(String field, String pattern) {
+    private boolean isPatternFound(String field, String pattern) {
         Pattern ptrn = Pattern.compile(pattern);
         Matcher matcher = ptrn.matcher(field);
 

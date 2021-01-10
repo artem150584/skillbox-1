@@ -1,6 +1,6 @@
 package org.example.web.dto;
 
-public class RemovedBook {
+public class BookPattern {
 
     private String authorPattern;
     private String titlePattern;
