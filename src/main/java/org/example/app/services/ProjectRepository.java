@@ -9,5 +9,7 @@ public interface ProjectRepository<T> {
 
     void store(T book);
 
-    boolean removeItemById(RemovedBook removedBook);
+    boolean removeItemById(Integer bookIdToRemove);
+
+    boolean removeItemsByPattern(RemovedBook removedBook);
 }

@@ -51,20 +51,30 @@
             </table>
         </form>
 
-        <form method="post" th:action="@{/books/remove}" th:object="${removedBook}">
+        <form method="post" th:action="@{/books/remove}">
             <table>
                 <tr>
                     <td>
-                        <input type="text" placeholder="id number" th:field="*{id}">
+                        <input type="text" placeholder="id number" th:name="bookIdToRemove">
                     </td>
                     <td>
-                        <input type="text" placeholder="author regexp" th:field="*{authorRegExp}">
+                        <input type="submit" value="remove">
+                    </td>
+                </tr>
+            </table>
+        </form>
+
+        <form method="post" th:action="@{/books/remove_pattern}" th:object="${removedBook}">
+            <table>
+                <tr>
+                    <td>
+                        <input type="text" placeholder="author pattern" th:field="*{authorPattern}">
                     </td>
                     <td>
-                        <input type="text" placeholder="title regexp" th:field="*{titleRegExp}">
+                        <input type="text" placeholder="title pattern" th:field="*{titlePattern}">
                     </td>
                     <td>
-                        <input type="text" placeholder="size regexp" th:field="*{sizeRegExp}">
+                        <input type="text" placeholder="size pattern" th:field="*{sizePattern}">
                     </td>
                     <td>
                         <input type="submit" value="remove">

@@ -33,22 +33,31 @@ public class BookRepository implements ProjectRepository<Book> {
     }
 
     @Override
-    public boolean removeItemById(RemovedBook removedBook) {
-        List<Book> booksToRemove = new ArrayList<>();
-        Integer removedBookId = removedBook.getId();
-        String authorPattern = removedBook.getAuthorRegExp();
-        String titlePattern = removedBook.getTitleRegExp();
-        String sizePattern = removedBook.getSizeRegExp();
+    public boolean removeItemById(Integer bookIdToRemove) {
+        for (Book book : reteiveAll()) {
+            if (book.getId().equals(bookIdToRemove)) {
+                logger.info("remove book completed: " + book);
+                return repo.remove(book);
+            }
+        }
+        return false;
+    }
 
-        boolean isAnyFieldPresent = (removedBookId != null) || !authorPattern.isEmpty() ||
-                !titlePattern.isEmpty() || !sizePattern.isEmpty();
+    @Override
+    public boolean removeItemsByPattern(RemovedBook removedBook) {
+        List<Book> booksToRemove = new ArrayList<>();
+
+        String authorPattern = removedBook.getAuthorPattern();
+        String titlePattern = removedBook.getTitlePattern();
+        String sizePattern = removedBook.getSizePattern();
+
+        boolean isAnyFieldFilled = !(authorPattern.isEmpty() && titlePattern.isEmpty() && sizePattern.isEmpty());
 
         for (Book book : reteiveAll()) {
-            if (isAnyFieldPresent &&
-                    ((book.getId().equals(removedBookId) || removedBookId == null) &&
-                            isRegExpFound(book.getAuthor(), authorPattern) &&
-                            isRegExpFound(book.getTitle(), titlePattern) &&
-                            isRegExpFound(String.format("%d", book.getSize()), sizePattern))) {
+            if (isAnyFieldFilled &&
+                    isRegExpFound(book.getAuthor(), authorPattern) &&
+                    isRegExpFound(book.getTitle(), titlePattern) &&
+                    isRegExpFound(String.format("%d", book.getSize()), sizePattern)) {
                 logger.info("remove book completed: " + book);
                 booksToRemove.add(book);
             }

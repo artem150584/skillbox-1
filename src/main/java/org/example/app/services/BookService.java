@@ -25,7 +25,11 @@ public class BookService {
         bookRepo.store(book);
     }
 
-    public boolean removeBookById(RemovedBook removedBook) {
-        return bookRepo.removeItemById(removedBook);
+    public boolean removeBookById(Integer bookIdToRemove) {
+        return bookRepo.removeItemById(bookIdToRemove);
+    }
+
+    public boolean removeBookByPattern(RemovedBook removedBook) {
+        return bookRepo.removeItemsByPattern(removedBook);
     }
 }

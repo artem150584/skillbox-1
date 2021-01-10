@@ -2,50 +2,40 @@ package org.example.web.dto;
 
 public class RemovedBook {
 
-    private Integer id;
-    private String authorRegExp;
-    private String titleRegExp;
-    private String sizeRegExp;
+    private String authorPattern;
+    private String titlePattern;
+    private String sizePattern;
 
-    public Integer getId() {
-        return id;
+    public String getAuthorPattern() {
+        return authorPattern;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setAuthorPattern(String authorPattern) {
+        this.authorPattern = authorPattern;
     }
 
-    public String getAuthorRegExp() {
-        return authorRegExp;
+    public String getTitlePattern() {
+        return titlePattern;
     }
 
-    public void setAuthorRegExp(String authorRegExp) {
-        this.authorRegExp = authorRegExp;
+    public void setTitlePattern(String titlePattern) {
+        this.titlePattern = titlePattern;
     }
 
-    public String getTitleRegExp() {
-        return titleRegExp;
+    public String getSizePattern() {
+        return sizePattern;
     }
 
-    public void setTitleRegExp(String titleRegExp) {
-        this.titleRegExp = titleRegExp;
-    }
-
-    public String getSizeRegExp() {
-        return sizeRegExp;
-    }
-
-    public void setSizeRegExp(String sizeRegExp) {
-        this.sizeRegExp = sizeRegExp;
+    public void setSizePattern(String sizePattern) {
+        this.sizePattern = sizePattern;
     }
 
     @Override
     public String toString() {
         return "RemovedBook{" +
-                "id=" + id +
-                ", authorRegExp='" + authorRegExp + '\'' +
-                ", titleRegExp='" + titleRegExp + '\'' +
-                ", sizeRegExp='" + sizeRegExp + '\'' +
+                "authorRegExp='" + authorPattern + '\'' +
+                ", titleRegExp='" + titlePattern + '\'' +
+                ", sizeRegExp='" + sizePattern + '\'' +
                 '}';
     }
 }
