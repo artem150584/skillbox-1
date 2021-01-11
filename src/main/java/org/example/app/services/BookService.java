@@ -18,11 +18,11 @@ public class BookService {
     }
 
     public List<Book> getAllBooks() {
-        return bookRepo.reteiveAll();
+        return bookRepo.retrieveAll();
     }
 
     public List<Book> getFilteredBooks(BookPattern removedBook) {
-        return bookRepo.reteiveFiltered(removedBook);
+        return bookRepo.retrieveFiltered(removedBook);
     }
 
     public void saveBook(Book book) {

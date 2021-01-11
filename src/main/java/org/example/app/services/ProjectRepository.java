@@ -5,9 +5,9 @@ import org.example.web.dto.BookPattern;
 import java.util.List;
 
 public interface ProjectRepository<T> {
-    List<T> reteiveAll();
+    List<T> retrieveAll();
 
-    List<T> reteiveFiltered(BookPattern bookPattern);
+    List<T> retrieveFiltered(BookPattern bookPattern);
 
     void store(T book);
 

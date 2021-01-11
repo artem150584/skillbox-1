@@ -7,8 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Repository
 public class BookRepository implements ProjectRepository<Book> {
@@ -17,12 +15,12 @@ public class BookRepository implements ProjectRepository<Book> {
     private final List<Book> repo = new ArrayList<>();
 
     @Override
-    public List<Book> reteiveAll() {
+    public List<Book> retrieveAll() {
         return new ArrayList<>(repo);
     }
 
     @Override
-    public List<Book> reteiveFiltered(BookPattern bookPattern) {
+    public List<Book> retrieveFiltered(BookPattern bookPattern) {
         List<Book> filteredBooks = new ArrayList<>();
 
         String authorPattern = bookPattern.getAuthorPattern();
@@ -31,11 +29,12 @@ public class BookRepository implements ProjectRepository<Book> {
 
         boolean isAnyFieldFilled = !(authorPattern.isEmpty() && titlePattern.isEmpty() && sizePattern.isEmpty());
 
-        for (Book book : reteiveAll()) {
+        for (Book book : retrieveAll()) {
+            String bookSize = book.getSize() == null ? "" : book.getSize().toString();
             if (isAnyFieldFilled &&
-                    isPatternFound(book.getAuthor(), authorPattern) &&
-                    isPatternFound(book.getTitle(), titlePattern) &&
-                    isPatternFound(String.format("%d", book.getSize()), sizePattern)) {
+                    book.getAuthor().matches(authorPattern) &&
+                    book.getTitle().matches(titlePattern) &&
+                    bookSize.matches(sizePattern)) {
                 filteredBooks.add(book);
             }
         }
@@ -56,7 +55,7 @@ public class BookRepository implements ProjectRepository<Book> {
 
     @Override
     public boolean removeItemById(Integer bookIdToRemove) {
-        for (Book book : reteiveAll()) {
+        for (Book book : retrieveAll()) {
             if (book.getId().equals(bookIdToRemove)) {
                 logger.info("remove book completed: " + book);
                 return repo.remove(book);
@@ -67,15 +66,8 @@ public class BookRepository implements ProjectRepository<Book> {
 
     @Override
     public boolean removeItemsByPattern(BookPattern removedBook) {
-        List<Book> booksToRemove = reteiveFiltered(removedBook);
+        List<Book> booksToRemove = retrieveFiltered(removedBook);
         logger.info("remove book(s) completed: " + booksToRemove);
         return repo.removeAll(booksToRemove);
-    }
-
-    private boolean isPatternFound(String field, String pattern) {
-        Pattern ptrn = Pattern.compile(pattern);
-        Matcher matcher = ptrn.matcher(field);
-
-        return matcher.find();
     }
 }
